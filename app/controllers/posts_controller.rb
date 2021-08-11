@@ -64,6 +64,8 @@ class PostsController < ApplicationController
     send_file 'output.docx'
   end
 
+  def edit_docx;end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post

@@ -19,7 +19,7 @@ require("@rails/actiontext")
 
 
 var Trix = require("trix");
-
+console.log(Trix.config)
 Trix.config.blockAttributes.heading1 = {
   tagName: 'h1',
   terminal: true,
