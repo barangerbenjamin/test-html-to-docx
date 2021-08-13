@@ -1,6 +1,47 @@
 <h1>Editing Post</h1>
 
-<%= render 'form', post: @post %>
+<%= render 'form', id: "post-edit", post: @post %>
 
 <%= link_to 'Show', @post %> |
 <%= link_to 'Back', posts_path %>
+<script>
+  let saveBody = function() {
+    postData("<%= post_url %>", { post: { body: editor.value } })
+    .then(data => {
+      console.log(data);
+    });
+  };
+  
+  function debounce(func, wait = 100) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func.apply(this, args);
+      }, wait);
+    };
+  }
+  
+  // Start  
+  const debounced = debounce(saveBody, 500);
+
+  const editor = document.querySelector("trix-editor#post_body");
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  editor.addEventListener('keyup', debounced);
+
+
+
+
+  async function postData(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'PATCH', 
+      credentials: 'same-origin', 
+      headers: {
+        "X-CSRF-Token": csrfToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  }
+</script>
